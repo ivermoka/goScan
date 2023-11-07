@@ -21,6 +21,9 @@ func main(){
         fmt.Println(err)
         return
     }
+	if len(files) == 0 {
+		fmt.Fprintf(os.Stderr, "%s\n", "No files found.")
+	}
 	for _, v := range files {
 		if !v.IsDir() {
 			continue
