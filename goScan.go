@@ -1,10 +1,9 @@
 package main
 
 // run command in directory with files and goScan.go:
-// go build -o go1/goScan go1/goScan.go && go1/goScan | xsv table
+// go build -o goScan/goScan goScan/goScan.go && goScan/goScan | xsv table
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -50,7 +49,7 @@ func getGoVersion(pt string) string{
 	cmd.Dir = pt
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 	}
 	trimmed := strings.TrimSpace(string(output))
 	trimmed = strings.TrimPrefix(trimmed, "go ")
