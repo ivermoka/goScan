@@ -49,7 +49,7 @@ func getGoVersion(pt string) string{
 	cmd.Dir = pt
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\n", pt, err)
+		fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\noutput was %s", pt, err, string(output))
 	}
 	trimmed := strings.TrimSpace(string(output))
 	trimmed = strings.TrimPrefix(trimmed, "go ")
