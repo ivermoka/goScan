@@ -1,4 +1,4 @@
-module github.com/ivermoka/go1
+module github.com/ivermoka/goScan
 
 go 1.21.4
 

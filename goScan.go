@@ -1,7 +1,8 @@
 package main
 
 // run command in directory with files and goScan.go:
-// go build -o goScan/goScan goScan/goScan.go && goScan/goScan | xsv table
+// go build -o goScan/goScan goScan/goScan.go && goScan/goScan (arguments) | xsv table
+
 import (
 	"fmt"
 	"io"
@@ -42,6 +43,18 @@ func main(){
 			var goVersion string
 			if hasGoVersion(string(b)) {
 				goVersion = getGoVersion(v.Name())
+				if goVersion == "1.21.4" {
+					continue
+				} 
+				isArg := false
+				for _, args := range os.Args { 
+					if goVersion == string(args) {
+						isArg = true
+					}
+				}
+				if isArg {
+					continue
+				}
 			}
 			dockerFrom := getDockerFrom(v.Name())
 			fmt.Printf("%s,%s,%s\n", v.Name(), goVersion, dockerFrom)
@@ -95,5 +108,10 @@ func getDockerFrom(pt string) string{
 	if index != -1 {
 		trimmed = trimmed[:index]
 	}
+	trimmedVersion := strings.TrimLeft(trimmed, "golan:")
+	if trimmedVersion == "1.21.4" {
+		return "correct version"
+	}
 	return trimmed
 }
+
