@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func main(){
+func Main(){
 	f, err := os.Open(".")
     if err != nil {
         fmt.Println(err)
@@ -55,7 +55,6 @@ func getGoVersion(pt string) string{
 	trimmed = strings.TrimPrefix(trimmed, "go ")
 	return trimmed
 }
-
 func getDockerFrom(pt string) string{
 	cmd := exec.Command("grep", "-m", "1", "^FROM", "Dockerfile")
 	cmd.Dir = pt
