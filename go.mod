@@ -1,6 +1,6 @@
 module github.com/ivermoka/go1
 
-go 1.21.1
+go 1.21.4
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

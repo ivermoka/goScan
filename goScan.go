@@ -4,6 +4,8 @@ package main
 // go build -o goScan/goScan goScan/goScan.go && goScan/goScan | xsv table
 import (
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -28,7 +30,19 @@ func main(){
 			continue
 		}
 		if isGoProject(v.Name()) {
-			goVersion := getGoVersion(v.Name())
+			f, err := os.Open(v.Name() + "/go.mod")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer f.Close()
+			b, err := io.ReadAll(f)
+			if err != nil {
+				log.Fatal(err)
+			}
+			var goVersion string
+			if hasGoVersion(string(b)) {
+				goVersion = getGoVersion(v.Name())
+			}
 			dockerFrom := getDockerFrom(v.Name())
 			fmt.Printf("%s,%s,%s\n", v.Name(), goVersion, dockerFrom)
 		}
@@ -49,11 +63,24 @@ func getGoVersion(pt string) string{
 	cmd.Dir = pt
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\noutput was %s", pt, err, string(output))
+		if len(string(output)) != 0{
+			fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\noutput was %s\n", pt, err, string(output))
+		} else {
+			fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\n", pt, err)
+		}
 	}
 	trimmed := strings.TrimSpace(string(output))
 	trimmed = strings.TrimPrefix(trimmed, "go ")
 	return trimmed
+}
+func hasGoVersion(content string) bool {
+	lines := strings.Split(content, "\n")
+	for _, v := range lines{
+		if strings.HasPrefix(v, "go "){
+			return true
+		}
+	}
+	return false
 }
 func getDockerFrom(pt string) string{
 	cmd := exec.Command("grep", "-m", "1", "^FROM", "Dockerfile")
