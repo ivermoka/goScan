@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func Main(){
+func main(){
 	f, err := os.Open(".")
     if err != nil {
         fmt.Println(err)
