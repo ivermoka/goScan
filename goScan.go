@@ -6,7 +6,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -33,23 +32,22 @@ func main(){
 		if isGoProject(v.Name()) {
 			f, err := os.Open(v.Name() + "/go.mod")
 			if err != nil {
-				log.Fatal(err)
+				fmt.Fprintf(os.Stderr, "%s\n", "Could not open file.")
 			}
 			defer f.Close()
 			b, err := io.ReadAll(f)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Fprintf(os.Stderr, "%s\n", "Could not read file.")
 			}
 			var goVersion string
 			if hasGoVersion(string(b)) {
 				goVersion = getGoVersion(v.Name())
-				if goVersion == "1.21.4" {
-					continue
-				} 
+				os.Args = append(os.Args, "1.21.4")
 				isArg := false
 				for _, args := range os.Args { 
 					if goVersion == string(args) {
 						isArg = true
+						break
 					}
 				}
 				if isArg {
