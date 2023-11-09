@@ -107,7 +107,7 @@ func getDockerFrom(pt string) string {
 	}
 	trimmed := strings.TrimSpace(string(output))
 	trimmed = strings.TrimPrefix(trimmed, "FROM ")
-	index := strings.Index(trimmed, " as ")
+	index := strings.Index(strings.ToLower(trimmed), " as ")
 	if index != -1 {
 		trimmed = trimmed[:index]
 	}
