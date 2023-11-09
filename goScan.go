@@ -11,17 +11,17 @@ import (
 	"strings"
 )
 
-func main(){
+func main() {
 	f, err := os.Open(".")
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	files, err := f.Readdir(0)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	if len(files) == 0 {
 		fmt.Fprintf(os.Stderr, "%s\n", "No files found.")
 	}
@@ -44,7 +44,7 @@ func main(){
 				goVersion = getGoVersion(v.Name())
 				os.Args = append(os.Args, "1.21.4")
 				isArg := false
-				for _, args := range os.Args { 
+				for _, args := range os.Args[1:] {
 					if goVersion == string(args) {
 						isArg = true
 						break
@@ -61,7 +61,7 @@ func main(){
 }
 
 func isGoProject(pt string) bool {
-	_, err := os.Stat(pt + "/go.mod") 
+	_, err := os.Stat(pt + "/go.mod")
 	if err != nil {
 		return false
 	}
@@ -69,12 +69,12 @@ func isGoProject(pt string) bool {
 	return true
 }
 
-func getGoVersion(pt string) string{
+func getGoVersion(pt string) string {
 	cmd := exec.Command("grep", "^go", "go.mod")
 	cmd.Dir = pt
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		if len(string(output)) != 0{
+		if len(string(output)) != 0 {
 			fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\noutput was %s\n", pt, err, string(output))
 		} else {
 			fmt.Fprintf(os.Stderr, "error checking go version in %s: %s\n", pt, err)
@@ -86,14 +86,14 @@ func getGoVersion(pt string) string{
 }
 func hasGoVersion(content string) bool {
 	lines := strings.Split(content, "\n")
-	for _, v := range lines{
-		if strings.HasPrefix(v, "go "){
+	for _, v := range lines {
+		if strings.HasPrefix(v, "go ") {
 			return true
 		}
 	}
 	return false
 }
-func getDockerFrom(pt string) string{
+func getDockerFrom(pt string) string {
 	cmd := exec.Command("grep", "-m", "1", "^FROM", "Dockerfile")
 	cmd.Dir = pt
 	output, err := cmd.CombinedOutput()
@@ -112,4 +112,3 @@ func getDockerFrom(pt string) string{
 	}
 	return trimmed
 }
-
