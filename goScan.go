@@ -2,6 +2,7 @@ package main
 
 // run command in directory with files and goScan.go:
 // go build -o goScan/goScan goScan/goScan.go && goScan/goScan (arguments) | xsv table
+// go repos with go version >1.11 will be shown as >1.11 (version is not in go.mod)
 
 import (
 	"fmt"
@@ -54,6 +55,9 @@ func main(){
 					continue
 				}
 			}
+			if goVersion == "" {
+				goVersion = ">1.11"
+			}
 			dockerFrom := getDockerFrom(v.Name())
 			fmt.Printf("%s,%s,%s\n", v.Name(), goVersion, dockerFrom)
 		}
@@ -84,6 +88,7 @@ func getGoVersion(pt string) string{
 	trimmed = strings.TrimPrefix(trimmed, "go ")
 	return trimmed
 }
+
 func hasGoVersion(content string) bool {
 	lines := strings.Split(content, "\n")
 	for _, v := range lines{
