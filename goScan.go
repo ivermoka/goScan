@@ -66,11 +66,7 @@ func main() {
 
 func isGoProject(pt string) bool {
 	_, err := os.Stat(pt + "/go.mod")
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func getGoVersion(pt string) string {
