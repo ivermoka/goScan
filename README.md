@@ -1,6 +1,6 @@
 # goScan
 
-goScan is a program used for checking go version and docker FROM line. Made for Aller Media.
+goScan is a program used for checking go version and docker FROM line. 
 
 run command in directory with files and goScan.go:
 
